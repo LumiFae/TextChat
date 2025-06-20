@@ -7,6 +7,8 @@ namespace TextChat
 {
     public class Component : MonoBehaviour
     {
+        // TODO: Implement queue for this component to make sure nobody breaks this stuff
+        
         private TextToy _toy;
 
         private Player _player;
