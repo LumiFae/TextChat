@@ -1,4 +1,5 @@
 ﻿using LabApi.Features.Wrappers;
+using MEC;
 using Mirror;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace TextChat
         public void Awake()
         {
             _transform = transform;
+            Timing.CallDelayed(Plugin.Instance.Config.MessageExpireTime, () => _toy.Destroy(), gameObject);
         }
         
         public void Update()
