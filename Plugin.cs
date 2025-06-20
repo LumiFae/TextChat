@@ -1,0 +1,44 @@
+using LabApi.Loader;
+
+namespace TextChat
+{
+    public sealed class Plugin : LabApi.Loader.Features.Plugins.Plugin
+    {
+        public static Plugin Instance { get; private set; }
+
+        public Config Config { get; private set; }
+
+        public Translation Translation { get; private set; }
+        
+        public override void Enable()
+        {
+            Instance = this;
+        }
+
+        public override void Disable()
+        {
+            Instance = null!;
+        }
+
+        public override void LoadConfigs()
+        {
+            // this.TryLoadConfig("config.yml", out Config config);
+            Config = 
+                // config ?? 
+                new Config();
+            
+            // this.TryLoadConfig("translation.yml", out Translation translation);
+            Translation = 
+                // translation ?? 
+                new Translation();
+            
+            base.LoadConfigs();
+        }
+
+        public override string Name { get; } = "TextChat";
+        public override string Description { get; } = "Adds text chat functionality to global and proximity areas.";
+        public override string Author { get; } = "LumiFae";
+        public override Version Version { get; } = new (1, 0, 0);
+        public override Version RequiredApiVersion { get; } = new (1, 0, 2);
+    }
+}
