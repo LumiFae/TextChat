@@ -26,7 +26,10 @@ namespace TextChat
                 {
                     _queue[_player].Remove(_toy.TextFormat);
                     string nextMessage = _queue[_player].FirstOrDefault();
-                    if(nextMessage != null) Spawn(_player, nextMessage);
+                    if(nextMessage != null) 
+                        Spawn(_player, nextMessage);
+                    else 
+                        _queue.Remove(_player);
                     _toy.Destroy();
                 }, 
             gameObject);
