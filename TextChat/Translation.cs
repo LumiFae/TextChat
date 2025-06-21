@@ -4,9 +4,9 @@
     {
         public string Prefix { get; set; } = "<color=green>💬: </color>";
 
-        public string CommandName { get; set; } = "chat";
-
-        public string CommandDescription { get; set; } = "Send a text chat message";
+        // public string CommandName { get; set; } = "chat";
+        //
+        // public string CommandDescription { get; set; } = "Send a text chat message";
         
         public string Successful { get; set; } = "Successfully sent message.";
 

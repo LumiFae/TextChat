@@ -20,8 +20,8 @@ namespace TextChat
             return resp == null;
         }
 
-        public string Command { get; } = Plugin.Instance.Translation.CommandName;
+        public string Command { get; } = "chat";
         public string[] Aliases { get; } = Array.Empty<string>();
-        public string Description { get; } = Plugin.Instance.Translation.CommandDescription;
+        public string Description { get; } = "Send a message!";
     }
 }
