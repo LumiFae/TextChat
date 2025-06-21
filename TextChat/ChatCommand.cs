@@ -16,12 +16,12 @@ namespace TextChat
             }
             
             string resp = Events.TrySendMessage(player, string.Join(" ", arguments));
-            response = resp ?? "Success!";
+            response = resp ?? Plugin.Instance.Translation.Successful;
             return resp == null;
         }
 
-        public string Command { get; } = "chat";
+        public string Command { get; } = Plugin.Instance.Translation.CommandName;
         public string[] Aliases { get; } = Array.Empty<string>();
-        public string Description { get; } = "Send a text chat message";
+        public string Description { get; } = Plugin.Instance.Translation.CommandDescription;
     }
 }

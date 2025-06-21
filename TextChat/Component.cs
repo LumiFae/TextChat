@@ -1,13 +1,15 @@
-﻿using LabApi.Features.Wrappers;
+﻿using LabApi.Features.Extensions;
+using LabApi.Features.Wrappers;
 using MEC;
 using Mirror;
+using PlayerRoles;
 using UnityEngine;
 
 namespace TextChat
 {
     public class Component : MonoBehaviour
     {
-        // TODO: Implement queue for this component to make sure nobody breaks this stuff
+        private static Dictionary<Player, List<string>> _queue = new ();
         
         private TextToy _toy;
 
@@ -18,7 +20,16 @@ namespace TextChat
         public void Awake()
         {
             _transform = transform;
-            Timing.CallDelayed(Plugin.Instance.Config.MessageExpireTime, () => _toy.Destroy(), gameObject);
+            Timing.CallDelayed(
+                Plugin.Instance.Config.MessageExpireTime, 
+                () =>
+                {
+                    _queue[_player].Remove(_toy.TextFormat);
+                    string nextMessage = _queue[_player].FirstOrDefault();
+                    if(nextMessage != null) Spawn(_player, nextMessage);
+                    _toy.Destroy();
+                }, 
+            gameObject);
         }
         
         public void Update()
@@ -46,7 +57,21 @@ namespace TextChat
             observer.SendFakeSyncVar(_toy.Base, 2, _transform.localRotation);
         }
 
-        public static void Spawn(Player player, string text)
+        public static void TrySpawn(Player player, string text)
+        {
+            if (!_queue.ContainsKey(player))
+            {
+                _queue.Add(player, new ());
+                _queue[player].Add(text);
+                Spawn(player, text);
+            }
+            else
+            {
+                _queue[player].Add(text);
+            }
+        }
+
+        private static void Spawn(Player player, string text)
         {
             TextToy toy = TextToy.Create(new (0, Plugin.Instance.Config.HeightOffset, 0), player.GameObject.transform);
             toy.TextFormat = text;
@@ -62,5 +87,11 @@ namespace TextChat
                 netId = toy.Base.netId,
             });
         }
+
+        public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();
+        
+        public static bool ContainsPlayer(Player player) => _queue.ContainsKey(player);
+        
+        public static void RemovePlayer(Player player) => _queue.Remove(player);
     }
 }

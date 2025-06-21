@@ -1,3 +1,5 @@
+using LabApi.Events.Arguments.PlayerEvents;
+using LabApi.Events.Handlers;
 using LabApi.Loader;
 
 namespace TextChat
@@ -13,23 +15,33 @@ namespace TextChat
         public override void Enable()
         {
             Instance = this;
+            
+            PlayerEvents.ChangingRole += OnChangingRole;
         }
 
         public override void Disable()
         {
             Instance = null!;
+            
+            PlayerEvents.ChangingRole -= OnChangingRole;
+        }
+
+        private void OnChangingRole(PlayerChangingRoleEventArgs ev)
+        {
+            if(!Component.CanSpawn(ev.NewRole) && Component.ContainsPlayer(ev.Player))
+                Component.RemovePlayer(ev.Player);
         }
 
         public override void LoadConfigs()
         {
-            // this.TryLoadConfig("config.yml", out Config config);
+            this.TryLoadConfig("config.yml", out Config config);
             Config = 
-                // config ?? 
+                config ?? 
                 new Config();
             
-            // this.TryLoadConfig("translation.yml", out Translation translation);
+            this.TryLoadConfig("translation.yml", out Translation translation);
             Translation = 
-                // translation ?? 
+                translation ?? 
                 new Translation();
             
             base.LoadConfigs();

@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat", "TextChat.csproj", "{54DE50D4-7C4F-4F6A-9CE2-874BFDCB3B9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat", "TextChat\TextChat.csproj", "{54DE50D4-7C4F-4F6A-9CE2-874BFDCB3B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat.RueI", "TextChat.RueI\TextChat.RueI.csproj", "{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{54DE50D4-7C4F-4F6A-9CE2-874BFDCB3B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54DE50D4-7C4F-4F6A-9CE2-874BFDCB3B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54DE50D4-7C4F-4F6A-9CE2-874BFDCB3B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
