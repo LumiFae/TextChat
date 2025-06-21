@@ -94,6 +94,8 @@ namespace TextChat
             {
                 netId = toy.Base.netId,
             });
+            
+            player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Plugin.Instance.Config.MessageExpireTime);
         }
 
         public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();

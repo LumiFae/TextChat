@@ -3,12 +3,10 @@
     public class Translation
     {
         public string Prefix { get; set; } = "<color=green>💬: </color>";
-
-        // public string CommandName { get; set; } = "chat";
-        //
-        // public string CommandDescription { get; set; } = "Send a text chat message";
         
         public string Successful { get; set; } = "Successfully sent message.";
+
+        public string CurrentMessage { get; set; } = "Current message:\n{0}";
 
         public string ContentTooLong { get; set; } = "Message content is too long.";
 
