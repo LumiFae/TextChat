@@ -82,7 +82,7 @@ namespace TextChat
         private static void Spawn(Player player, string text)
         {
             TextToy toy = TextToy.Create(new (0, Plugin.Instance.Config.HeightOffset, 0), player.GameObject.transform);
-            toy.TextFormat = text;
+            toy.TextFormat = $"<size={Plugin.Instance.Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
             
             Component comp = toy.GameObject.AddComponent<Component>();
             comp._toy = toy;

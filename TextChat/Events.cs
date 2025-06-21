@@ -39,7 +39,7 @@ namespace TextChat
             
             if (player.IsAlive && !player.IsSCP)
             {
-                Component.TrySpawn(player, $"<size={Plugin.Instance.Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>");
+                Component.TrySpawn(player, text);
                 SentMessage?.Invoke(player, text);
                 SentProximityMessage?.Invoke(player, text);
                 return null;
