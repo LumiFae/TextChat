@@ -4,6 +4,7 @@ using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
 using PlayerRoles;
+using RueI.Extensions.HintBuilding;
 
 namespace TextChat.RueI
 {
@@ -47,5 +48,14 @@ namespace TextChat.RueI
         
         [Description("The content that appears before a message, {0} is the player nickname")]
         public string Prefix { get; set; } = "<color=green>{0}: </color>";
+
+        [Description("The size of the text, in pixels.")]
+        public int FontSize { get; set; } = 28;
+        
+        [Description("The alignment of the hint.")]
+        public HintBuilding.AlignStyle Alignment { get; set; } = HintBuilding.AlignStyle.Left;
+
+        [Description("The vertical position of the hint.")]
+        public int VerticalPosition { get; set; } = 200;
     }
 }

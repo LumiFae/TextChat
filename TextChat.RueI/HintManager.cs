@@ -44,18 +44,20 @@ namespace TextChat.RueI
     
     public static class HintManager
     {
+        private static Config Config => Plugin.Instance.Config!;
+        
         private static List<string> ActiveSpectatorMessages = new();
         private static List<string> ActiveScpMessages = new();
 
-        internal static readonly DynamicElement ScpElement = new(ScpContent, 200);
-        internal static readonly DynamicElement SpectatorElement = new(SpectatorContent, 200);
+        internal static readonly DynamicElement ScpElement = new(ScpContent, Config.VerticalPosition);
+        internal static readonly DynamicElement SpectatorElement = new(SpectatorContent, Config.VerticalPosition);
         
         internal static void AddSpectatorChatMessage(string text)
         {
             ActiveSpectatorMessages.Add(text);
             DisplayDataStore.UpdateAndValidateAll();
             
-            Timing.CallDelayed(Plugin.Instance.Config!.MessageExpireTime, () =>
+            Timing.CallDelayed(Config.MessageExpireTime, () =>
             {
                 ActiveSpectatorMessages.Remove(text);
                 DisplayDataStore.UpdateAndValidateAll();
@@ -67,7 +69,7 @@ namespace TextChat.RueI
             ActiveScpMessages.Add(text);
             DisplayDataStore.UpdateAndValidateAll();
             
-            Timing.CallDelayed(Plugin.Instance.Config!.MessageExpireTime, () =>
+            Timing.CallDelayed(Config.MessageExpireTime, () =>
             {
                 ActiveScpMessages.Remove(text);
                 DisplayDataStore.UpdateAndValidateAll();
@@ -78,9 +80,9 @@ namespace TextChat.RueI
         {
             StringBuilder builder = StringBuilderPool.Shared.Rent();
 
-            int fontSize = 28;
+            int fontSize = Config.FontSize;
             
-            builder.SetAlignment(HintBuilding.AlignStyle.Left);
+            builder.SetAlignment(Config.Alignment);
             builder.SetSize(fontSize);
             // 40.665 is RueI's default line height
             builder.AddVOffset((list.Count - 1) * 40.665f);
