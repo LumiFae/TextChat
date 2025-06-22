@@ -85,6 +85,8 @@ namespace TextChat
 
         private static void Spawn(Player player, string text)
         {
+            if (!player.IsAlive || player.IsSCP) return;
+            
             TextToy toy = TextToy.Create(new (0, Plugin.Instance.Config.HeightOffset, 0), player.GameObject.transform);
             toy.TextFormat = $"<size={Plugin.Instance.Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
             
