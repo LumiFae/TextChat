@@ -32,10 +32,8 @@ namespace TextChat
 
             string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
 
-            if (Plugin.Instance.Config.BannedWords.Any(bannedWord => validationText.Contains(bannedWord)))
-            {
+            if (validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => x == word)))
                 return Translation.ContainsBadWord;
-            }
             
             if (player.IsAlive && !player.IsSCP)
             {
