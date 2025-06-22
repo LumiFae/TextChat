@@ -10,6 +10,8 @@ namespace TextChat
 {
     public class Component : MonoBehaviour
     {
+        public static Config Config => Plugin.Instance.Config;
+        
         private static readonly Dictionary<Player, List<string>> Queue = new ();
         
         private static readonly List<Component> Components = new ();
@@ -19,6 +21,8 @@ namespace TextChat
         private Player _player;
 
         private Transform _transform;
+
+        private string _rawText;
 
         public void Awake()
         {
@@ -35,9 +39,9 @@ namespace TextChat
                 return;
             }
 
-            texts.Remove(_toy.TextFormat);
+            texts.Remove(_rawText);
             string nextMessage = Queue[_player].FirstOrDefault();
-            if(nextMessage != null) 
+            if(nextMessage != null)
                 Spawn(_player, nextMessage);
             else 
                 Queue.Remove(_player);
@@ -91,8 +95,10 @@ namespace TextChat
             toy.TextFormat = $"<size={Plugin.Instance.Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
             
             Component comp = toy.GameObject.AddComponent<Component>();
+            
             comp._toy = toy;
             comp._player = player;
+            comp._rawText = text;
             
             Components.Add(comp);
             
