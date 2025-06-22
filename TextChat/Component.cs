@@ -4,12 +4,15 @@ using MEC;
 using Mirror;
 using PlayerRoles;
 using UnityEngine;
+using Utils.NonAllocLINQ;
 
 namespace TextChat
 {
     public class Component : MonoBehaviour
     {
-        private static Dictionary<Player, List<string>> _queue = new ();
+        private static readonly Dictionary<Player, List<string>> Queue = new ();
+        
+        private static readonly List<Component> Components = new ();
         
         private TextToy _toy;
 
@@ -25,18 +28,19 @@ namespace TextChat
 
         private void Destroy()
         {
-            if (!_queue.ContainsKey(_player))
+            Components.Remove(this);
+            if (!Queue.TryGetValue(_player, out List<string> texts))
             {
                 _toy.Destroy();
                 return;
             }
 
-            _queue[_player].Remove(_toy.TextFormat);
-            string nextMessage = _queue[_player].FirstOrDefault();
+            texts.Remove(_toy.TextFormat);
+            string nextMessage = Queue[_player].FirstOrDefault();
             if(nextMessage != null) 
                 Spawn(_player, nextMessage);
             else 
-                _queue.Remove(_player);
+                Queue.Remove(_player);
             _toy.Destroy();
         }
         
@@ -67,15 +71,15 @@ namespace TextChat
 
         public static void TrySpawn(Player player, string text)
         {
-            if (!_queue.ContainsKey(player))
+            if (!Queue.TryGetValue(player, out List<string> texts))
             {
-                _queue.Add(player, new ());
-                _queue[player].Add(text);
+                Queue.Add(player, new ());
+                Queue[player].Add(text);
                 Spawn(player, text);
             }
             else
             {
-                _queue[player].Add(text);
+                texts.Add(text);
             }
         }
 
@@ -87,6 +91,8 @@ namespace TextChat
             Component comp = toy.GameObject.AddComponent<Component>();
             comp._toy = toy;
             comp._player = player;
+            
+            Components.Add(comp);
             
             toy.Base.enabled = false;
             
@@ -100,8 +106,13 @@ namespace TextChat
 
         public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();
         
-        public static bool ContainsPlayer(Player player) => _queue.ContainsKey(player);
+        public static bool ContainsPlayer(Player player) => Queue.ContainsKey(player);
         
-        public static void RemovePlayer(Player player) => _queue.Remove(player);
+        public static void RemovePlayer(Player player)
+        {
+            Queue.Remove(player);
+            if (!Components.TryGetFirst(comp => comp._player == player, out Component component)) return;
+            component.Destroy();
+        }
     }
 }
