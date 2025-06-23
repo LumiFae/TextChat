@@ -111,10 +111,10 @@ namespace TextChat
                 netId = toy.Base.netId,
             });
 
-            SendingProximityHintEventArgs ev = Events.OnSendingProximityHint(player, text);
+            SendingProximityHintEventArgs ev = Events.OnSendingProximityHint(player, text, string.Format(Plugin.Instance.Translation.CurrentMessage, text));
             
             if(ev.IsAllowed)
-                player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Config.MessageExpireTime);
+                player.SendHint(ev.HintContent, Config.MessageExpireTime);
 
             Events.OnSpawnedProximityChat(player, text);
         }

@@ -123,9 +123,9 @@ namespace TextChat
             return ev;
         }
 
-        public static SendingProximityHintEventArgs OnSendingProximityHint(Player player, string text)
+        public static SendingProximityHintEventArgs OnSendingProximityHint(Player player, string text, string hintContent)
         {
-            SendingProximityHintEventArgs ev = new(player, text);
+            SendingProximityHintEventArgs ev = new(player, text, hintContent);
             SendingProximityHint?.Invoke(ev);
             return ev;
         }

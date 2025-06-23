@@ -39,7 +39,7 @@ namespace TextChat.RueI
         private void OnSendingProximityHint(SendingProximityHintEventArgs ev)
         {
             ev.IsAllowed = false;
-            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.Text, 300, TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new ());
+            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.HintContent, 300, TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new ());
         }
 
         private void OnSendingMessage(SendingOtherMessageEventArgs ev)
