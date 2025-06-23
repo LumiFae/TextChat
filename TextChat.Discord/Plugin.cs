@@ -61,7 +61,7 @@ namespace TextChat.Discord
 
             var data = new
             {
-                content = string.Format(tuple.text, ev.Player.DisplayName, ev.Player.UserId, ev.Text)
+                content = string.Format(tuple.text, ev.Player.DisplayName, ev.Player.UserId, ev.Text.Replace("<noparse>", "").Replace("</noparse>", ""))
             };
 
             StringContent content = new(JsonSerializer.Serialize(data));
