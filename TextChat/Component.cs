@@ -3,6 +3,7 @@ using LabApi.Features.Wrappers;
 using MEC;
 using Mirror;
 using PlayerRoles;
+using TextChat.API.EventArgs;
 using TextChat.API.Extensions;
 using UnityEngine;
 using Utils.NonAllocLINQ;
@@ -109,8 +110,13 @@ namespace TextChat
             {
                 netId = toy.Base.netId,
             });
+
+            SendingProximityHintEventArgs ev = Events.OnSendingProximityHint(player, text);
             
-            player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Config.MessageExpireTime);
+            if(ev.IsAllowed)
+                player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Config.MessageExpireTime);
+
+            Events.OnSpawnedProximityChat(player, text);
         }
 
         public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();
