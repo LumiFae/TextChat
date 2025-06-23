@@ -2,18 +2,27 @@ using System.ComponentModel;
 using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
+using LabApi.Loader;
 using LabApi.Loader.Features.Plugins;
 using PlayerRoles;
 using RueI.Displays;
 using RueI.Extensions;
 using RueI.Extensions.HintBuilding;
 using TextChat.API.EventArgs;
+using UnityEngine;
+using UserSettings.ServerSpecific;
 
 namespace TextChat.RueI
 {
     public class Plugin : Plugin<Config>
     {
         public static Plugin Instance { get; private set; }
+
+        internal SSTwoButtonsSetting EnableDisableSetting;
+
+        internal SSSliderSetting TextSizeSetting;
+        
+        public Translation Translation { get; private set; }
         
         public override void Enable()
         {
@@ -21,6 +30,16 @@ namespace TextChat.RueI
             // handle global hints
             Events.SendingOtherMessage += OnSendingMessage;
             Events.SentOtherMessage += OnSentMessage;
+
+            EnableDisableSetting = new(null, Translation.ShouldShowSpectatorSelect, Translation.Yes, Translation.No, hint:Translation.ShouldShowSpectatorSelectHint);
+            TextSizeSetting = new(null, Translation.TextSizeSlider, Mathf.Min(Config!.FontSize, 18), Mathf.Max(Config!.FontSize, 38), Config!.FontSize, true, hint:Translation.TextSizeSliderHint);
+
+            ServerSpecificSettingsSync.DefinedSettings =
+            [
+                ..ServerSpecificSettingsSync.DefinedSettings ?? [],
+                new SSGroupHeader("TextChat Settings", hint: "This will only modify settings inside of SCP and Spectator chats."),
+                EnableDisableSetting, TextSizeSetting
+            ];
             
             Events.SendingProximityHint += OnSendingProximityHint;
             
@@ -34,6 +53,14 @@ namespace TextChat.RueI
             Events.SentOtherMessage -= OnSentMessage;
             Events.SendingProximityHint -= OnSendingProximityHint;
             PlayerEvents.ChangingRole -= OnChangingRole;
+        }
+
+        public override void LoadConfigs()
+        {
+            this.TryLoadConfig("translation.yml", out Translation translation);
+            Translation = translation ?? new ();
+            
+            base.LoadConfigs();
         }
 
         private void OnSendingProximityHint(SendingProximityHintEventArgs ev)
@@ -82,7 +109,7 @@ namespace TextChat.RueI
         [Description("The content that appears before a message, {0} is the player nickname")]
         public string Prefix { get; set; } = "<color=green>{0}: </color>";
 
-        [Description("The size of the text, in pixels.")]
+        [Description("The default size of the text, in pixels, also a server specific setting for per person.")]
         public int FontSize { get; set; } = 28;
         
         [Description("The alignment of the hint.")]
@@ -90,5 +117,19 @@ namespace TextChat.RueI
 
         [Description("The vertical position of the hint.")]
         public int VerticalPosition { get; set; } = 200;
+    }
+
+    public class Translation
+    {
+        public string ShouldShowSpectatorSelect { get; set; } = "Show Spectator Chat?";
+
+        public string ShouldShowSpectatorSelectHint { get; set; } = "Whether to show the spectator chat.";
+        
+        public string Yes { get; set; } = "Yes";
+        public string No { get; set; } = "No";
+
+        public string TextSizeSlider { get; set; } = "Text Size";
+        
+        public string TextSizeSliderHint { get; set; } = "How large should the text size be in the spectator/SCP chats?";
     }
 }
