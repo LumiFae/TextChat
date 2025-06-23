@@ -1,53 +1,18 @@
-﻿using System.Drawing;
-using System.Text;
-using LabApi.Features.Stores;
-using LabApi.Features.Wrappers;
+﻿using System.Text;
 using MEC;
 using NorthwoodLib.Pools;
-using PlayerRoles;
 using RueI.Displays;
 using RueI.Elements;
 using RueI.Extensions.HintBuilding;
-using RueI.Parsing.Enums;
 
 namespace TextChat.RueI
 {
-    internal sealed class DisplayDataStore : CustomDataStore
-    {
-        public DisplayDataStore(Player player) : base(player)
-        {
-            Player = player;
-            Display = new(player.ReferenceHub);
-            Validate();
-        }
-
-        public Player Player;
-
-        public Display Display;
-
-        public void Validate()
-        {
-            Display.Elements.Clear();
-            Display.Elements.Add(Player.Role == RoleTypeId.Spectator ? HintManager.SpectatorElement : HintManager.ScpElement);
-        }
-
-        public static void UpdateAndValidateAll()
-        {
-            foreach (Player player in Player.ReadyList.Where(player => player.Role == RoleTypeId.Spectator || player.IsSCP))
-            {
-                DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
-                store.Validate();
-                store.Display.Update();
-            }
-        }
-    }
-    
     public static class HintManager
     {
         private static Config Config => Plugin.Instance.Config!;
         
-        private static List<string> ActiveSpectatorMessages = new();
-        private static List<string> ActiveScpMessages = new();
+        private static readonly List<string> ActiveSpectatorMessages = new();
+        private static readonly List<string> ActiveScpMessages = new();
 
         internal static readonly DynamicElement ScpElement = new(ScpContent, Config.VerticalPosition);
         internal static readonly DynamicElement SpectatorElement = new(SpectatorContent, Config.VerticalPosition);
