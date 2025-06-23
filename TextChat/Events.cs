@@ -26,6 +26,16 @@ namespace TextChat
         /// Invoked whenever a proximity message is sent.
         /// </summary>
         public static event Action<SentProximityMessageEventArgs> SentProximityMessage;
+        
+        /// <summary>
+        /// Invoked before a current message hint is sent to the player, allows for overwriting the hint sending method.
+        /// </summary>
+        public static event Action<SendingProximityHintEventArgs> SendingProximityHint;
+        
+        /// <summary>
+        /// Invoked when a chat message spawns above a players head.
+        /// </summary>
+        public static event Action<SpawnedProximityChatEventArgs> SpawnedProximityChat;
 
         /// <summary>
         /// Invoked before sending a message not controlled by this plugin.
@@ -110,6 +120,20 @@ namespace TextChat
         {
             SendingOtherMessageEventArgs ev = new(player, text);
             SendingOtherMessage?.Invoke(ev);
+            return ev;
+        }
+
+        public static SendingProximityHintEventArgs OnSendingProximityHint(Player player, string text)
+        {
+            SendingProximityHintEventArgs ev = new(player, text);
+            SendingProximityHint?.Invoke(ev);
+            return ev;
+        }
+
+        public static SpawnedProximityChatEventArgs OnSpawnedProximityChat(Player player, string text)
+        {
+            SpawnedProximityChatEventArgs ev = new(player, text);
+            SpawnedProximityChat?.Invoke(ev);
             return ev;
         }
     }
