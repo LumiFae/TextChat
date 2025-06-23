@@ -8,12 +8,11 @@ namespace TextChat.API.EventArgs
         {
             Player = player;
             Text = text;
-            IsAllowed = true;
         }
         
         public Player Player { get; }
         public string Text { get; }
-        
-        public bool IsAllowed { get; set; }
+
+        public bool IsAllowed { get; set; } = true;
     }
 }

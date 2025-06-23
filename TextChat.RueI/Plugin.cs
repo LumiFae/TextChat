@@ -4,6 +4,8 @@ using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
 using PlayerRoles;
+using RueI.Displays;
+using RueI.Extensions;
 using RueI.Extensions.HintBuilding;
 using TextChat.API.EventArgs;
 
@@ -16,8 +18,12 @@ namespace TextChat.RueI
         public override void Enable()
         {
             Instance = this;
+            // handle global hints
             Events.SendingOtherMessage += OnSendingMessage;
             Events.SentOtherMessage += OnSentMessage;
+            
+            Events.SendingProximityHint += OnSendingProximityHint;
+            
             PlayerEvents.ChangingRole += OnChangingRole;
         }
 
@@ -26,7 +32,14 @@ namespace TextChat.RueI
             Instance = null;
             Events.SendingOtherMessage -= OnSendingMessage;
             Events.SentOtherMessage -= OnSentMessage;
+            Events.SendingProximityHint -= OnSendingProximityHint;
             PlayerEvents.ChangingRole -= OnChangingRole;
+        }
+
+        private void OnSendingProximityHint(SendingProximityHintEventArgs ev)
+        {
+            ev.IsAllowed = false;
+            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.Text, 300, TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new ());
         }
 
         private void OnSendingMessage(SendingOtherMessageEventArgs ev)
