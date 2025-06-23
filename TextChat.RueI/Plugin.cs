@@ -31,6 +31,7 @@ namespace TextChat.RueI
 
         private void OnSendingMessage(SendingOtherMessageEventArgs ev)
         {
+            if (!CheckIfValidRole(ev.Player)) return;
             DisplayDataStore store = ev.Player.GetDataStore<DisplayDataStore>();
             if (!store.Cooldown.IsReady)
             {
@@ -43,8 +44,10 @@ namespace TextChat.RueI
         private void OnSentMessage(SentOtherMessageEventArgs ev)
         {
             if(ev.Player.Role == RoleTypeId.Spectator) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
-            else if(ev.Player.Team == Team.SCPs) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            else if(ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
         }
+
+        private bool CheckIfValidRole(Player player) => !player.IsAlive || player.IsSCP;
 
         private void OnChangingRole(PlayerChangingRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();
 
