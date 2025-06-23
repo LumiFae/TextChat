@@ -71,7 +71,7 @@ namespace TextChat
                 return null;
             }
 
-            if (SendingOtherMessage == null || SentOtherMessage == null) 
+            if (SendingOtherMessage == null) 
                 return Translation.NotValidRole;
 
             SendingOtherMessageEventArgs sendingOtherMessageEventArgs = OnSendingOtherMessage(player, text);
