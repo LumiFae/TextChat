@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Net.Http;
+using System.Text.Json;
 using LabApi.Loader;
 using LabApi.Loader.Features.Plugins;
 using TextChat.API.Enums;
@@ -58,12 +59,15 @@ namespace TextChat.Discord
 
             if (tuple.client == null) return;
 
-            string content = $"{{\"content\": \"{string.Format(tuple.text, ev.Player.DisplayName, ev.Player.UserId, ev.Text)}\"}}";
+            var data = new
+            {
+                content = string.Format(tuple.text, ev.Player.DisplayName, ev.Player.UserId, ev.Text)
+            };
 
-            StringContent str = new(content);
-            str.Headers.ContentType = new("application/json");
+            StringContent content = new(JsonSerializer.Serialize(data));
+            content.Headers.ContentType = new("application/json");
             
-            tuple.client.PostAsync("", str);
+            tuple.client.PostAsync("", content);
         }
 
         public override string Name { get; } = "TextChat.Discord";
