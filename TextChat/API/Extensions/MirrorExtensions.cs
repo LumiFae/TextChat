@@ -1,11 +1,9 @@
-﻿using System.Reflection;
-using AdminToys;
+﻿using AdminToys;
 using LabApi.Features.Console;
 using LabApi.Features.Wrappers;
 using Mirror;
-using PlayerStatsSystem;
 
-namespace TextChat
+namespace TextChat.API.Extensions
 {
     public static class MirrorExtensions
     {

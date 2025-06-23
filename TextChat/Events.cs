@@ -1,6 +1,5 @@
 ﻿using LabApi.Features.Wrappers;
-using LabApi.Loader;
-using TextChat.EventArgs;
+using TextChat.API.EventArgs;
 
 namespace TextChat
 {
@@ -16,7 +15,7 @@ namespace TextChat
         /// <summary>
         /// Invoked whenever a message is sent.
         /// </summary>
-        public static event Action<Player, string> SentMessage;
+        public static event Action<SentMessageEventArgs> SentMessage;
 
         /// <summary>
         /// Invoked before sending a proximity message.
@@ -26,7 +25,7 @@ namespace TextChat
         /// <summary>
         /// Invoked whenever a proximity message is sent.
         /// </summary>
-        public static event Action<Player, string> SentProximityMessage;
+        public static event Action<SentProximityMessageEventArgs> SentProximityMessage;
 
         /// <summary>
         /// Invoked before sending a message not controlled by this plugin.
@@ -36,7 +35,7 @@ namespace TextChat
         /// <summary>
         /// Invoked whenever a person that doesn't have an allowed role sends a message.
         /// </summary>
-        public static event Action<Player, string> SentOtherMessage;
+        public static event Action<SentOtherMessageEventArgs> SentOtherMessage;
         
         public static string TrySendMessage(Player player, string text)
         {
@@ -66,8 +65,8 @@ namespace TextChat
                 
                 Component.TrySpawn(player, text);
                 
-                SentMessage?.Invoke(player, text);
-                SentProximityMessage?.Invoke(player, text);
+                SentMessage?.Invoke(new (player, text));
+                SentProximityMessage?.Invoke(new (player, text));
                 
                 return null;
             }
@@ -80,8 +79,8 @@ namespace TextChat
             if (sendingOtherMessageEventArgs.Response != null) 
                 return sendingOtherMessageEventArgs.Response;
             
-            SentMessage?.Invoke(player, text);
-            SentOtherMessage?.Invoke(player, text);
+            SentMessage?.Invoke(new (player, text));
+            SentOtherMessage?.Invoke(new (player, text));
             
             return null;
         }

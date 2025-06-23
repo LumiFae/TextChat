@@ -1,6 +1,6 @@
 using LabApi.Features.Wrappers;
 
-namespace TextChat.EventArgs
+namespace TextChat.API.EventArgs
 {
     public interface IEventArgs
     {

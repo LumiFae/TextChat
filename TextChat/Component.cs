@@ -3,6 +3,7 @@ using LabApi.Features.Wrappers;
 using MEC;
 using Mirror;
 using PlayerRoles;
+using TextChat.API.Extensions;
 using UnityEngine;
 using Utils.NonAllocLINQ;
 
@@ -27,7 +28,7 @@ namespace TextChat
         public void Awake()
         {
             _transform = transform;
-            Timing.CallDelayed(Plugin.Instance.Config.MessageExpireTime, Destroy, gameObject);
+            Timing.CallDelayed(Config.MessageExpireTime, Destroy, gameObject);
         }
 
         private void Destroy()
@@ -91,8 +92,8 @@ namespace TextChat
         {
             if (!player.IsAlive || player.IsSCP) return;
             
-            TextToy toy = TextToy.Create(new (0, Plugin.Instance.Config.HeightOffset, 0), player.GameObject.transform);
-            toy.TextFormat = $"<size={Plugin.Instance.Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
+            TextToy toy = TextToy.Create(new (0, Config.HeightOffset, 0), player.GameObject.transform);
+            toy.TextFormat = $"<size={Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
             
             Component comp = toy.GameObject.AddComponent<Component>();
             
@@ -109,7 +110,7 @@ namespace TextChat
                 netId = toy.Base.netId,
             });
             
-            player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Plugin.Instance.Config.MessageExpireTime);
+            player.SendHint(string.Format(Plugin.Instance.Translation.CurrentMessage, text), Config.MessageExpireTime);
         }
 
         public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();

@@ -1,10 +1,10 @@
 using LabApi.Features.Wrappers;
 
-namespace TextChat.EventArgs
+namespace TextChat.API.EventArgs
 {
-    public class SendingOtherMessageEventArgs : IDeniable
+    public class SendingProximityMessageEventArgs : IDeniable
     {
-        public SendingOtherMessageEventArgs(Player player, string text)
+        public SendingProximityMessageEventArgs(Player player, string text)
         {
             Player = player;
             Text = text;

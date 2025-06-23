@@ -5,7 +5,7 @@ using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
 using PlayerRoles;
 using RueI.Extensions.HintBuilding;
-using TextChat.EventArgs;
+using TextChat.API.EventArgs;
 
 namespace TextChat.RueI
 {
@@ -40,10 +40,10 @@ namespace TextChat.RueI
             store.Cooldown.Trigger(Config!.MessageCooldown);
         }
 
-        private void OnSentMessage(Player player, string text)
+        private void OnSentMessage(SentOtherMessageEventArgs ev)
         {
-            if(player.Role == RoleTypeId.Spectator) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, player.DisplayName) + text);
-            else if(player.Team == Team.SCPs) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, player.DisplayName) + text);
+            if(ev.Player.Role == RoleTypeId.Spectator) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            else if(ev.Player.Team == Team.SCPs) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
         }
 
         private void OnChangingRole(PlayerChangingRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();

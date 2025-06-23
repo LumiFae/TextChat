@@ -1,4 +1,4 @@
-namespace TextChat.EventArgs
+namespace TextChat.API.EventArgs
 {
     public interface IDeniable : IEventArgs
     {
