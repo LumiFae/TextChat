@@ -5,6 +5,7 @@ using LabApi.Features.Wrappers;
 using LabApi.Loader.Features.Plugins;
 using PlayerRoles;
 using RueI.Extensions.HintBuilding;
+using TextChat.EventArgs;
 
 namespace TextChat.RueI
 {
@@ -15,6 +16,7 @@ namespace TextChat.RueI
         public override void Enable()
         {
             Instance = this;
+            Events.SendingGlobalMessage += OnSendingMessage;
             Events.SentGlobalMessage += OnSentGlobalMessage;
             PlayerEvents.ChangingRole += OnChangingRole;
         }
@@ -22,8 +24,20 @@ namespace TextChat.RueI
         public override void Disable()
         {
             Instance = null;
+            Events.SendingGlobalMessage -= OnSendingMessage;
             Events.SentGlobalMessage -= OnSentGlobalMessage;
             PlayerEvents.ChangingRole -= OnChangingRole;
+        }
+
+        private void OnSendingMessage(SendingGlobalMessageEventArgs ev)
+        {
+            DisplayDataStore store = ev.Player.GetDataStore<DisplayDataStore>();
+            if (!store.Cooldown.IsReady)
+            {
+                ev.Response = "You are sending too many messages!";
+                return;
+            }
+            store.Cooldown.Trigger(Config!.MessageCooldown);
         }
 
         private void OnChangingRole(PlayerChangingRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();
@@ -45,6 +59,9 @@ namespace TextChat.RueI
     {
         [Description("The amount of time til a message expires/deletes.")]
         public float MessageExpireTime { get; set; } = 10;
+
+        [Description("The amount of time a user must wait before sending a new message.")]
+        public float MessageCooldown { get; set; } = 2;
         
         [Description("The content that appears before a message, {0} is the player nickname")]
         public string Prefix { get; set; } = "<color=green>{0}: </color>";
