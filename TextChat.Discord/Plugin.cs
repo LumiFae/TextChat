@@ -51,7 +51,7 @@ namespace TextChat.Discord
         {
             (HttpClient client, string text) tuple = ev.Type switch
             {
-                MessageType.Proximity => (_proxClient: _proximityClient, Translation.ProximityMessage),
+                MessageType.Proximity => (_proximityClient, Translation.ProximityMessage),
                 MessageType.Other => (_otherClient, Translation.OtherMessage),
                 _ => (null, null)
             };
