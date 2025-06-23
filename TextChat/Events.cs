@@ -29,14 +29,14 @@ namespace TextChat
         public static event Action<Player, string> SentProximityMessage;
 
         /// <summary>
-        /// Invoked before sending a global message.
+        /// Invoked before sending a message not controlled by this plugin.
         /// </summary>
-        public static event Action<SendingGlobalMessageEventArgs> SendingGlobalMessage;
+        public static event Action<SendingOtherMessageEventArgs> SendingOtherMessage;
         
         /// <summary>
-        /// Invoked whenever a person in a global based voice channel sends a message, i.e. SCP or Spectator.
+        /// Invoked whenever a person that doesn't have an allowed role sends a message.
         /// </summary>
-        public static event Action<Player, string> SentGlobalMessage;
+        public static event Action<Player, string> SentOtherMessage;
         
         public static string TrySendMessage(Player player, string text)
         {
@@ -53,9 +53,7 @@ namespace TextChat
             // prevents people from putting their own styles into the text
             text = $"<noparse>{text.Replace("</noparse>", "")}</noparse>";
 
-            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
-
-            if (validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => x == word)))
+            if (!IsTextAllowed(text))
                 return Translation.ContainsBadWord;
             
             if (player.IsAlive && !player.IsSCP)
@@ -67,27 +65,32 @@ namespace TextChat
                     return sendingProximityMessageEventArgs.Response;
                 
                 Component.TrySpawn(player, text);
-                SentMessage?.Invoke(player, text);
-                SentProximityMessage?.Invoke(player, text);
-                return null;
-            }
-
-            if (!player.IsAlive || player.IsSCP)
-            {
-                if (SendingGlobalMessage == null) 
-                    return Translation.NotValidRole;
-
-                SendingGlobalMessageEventArgs sendingGlobalMessageEventArgs = OnSendingGlobalMessage(player, text);
-
-                if (sendingGlobalMessageEventArgs.Response != null) 
-                    return sendingGlobalMessageEventArgs.Response;
                 
                 SentMessage?.Invoke(player, text);
-                SentGlobalMessage?.Invoke(player, text);
+                SentProximityMessage?.Invoke(player, text);
+                
                 return null;
             }
 
-            return Translation.NotValidRole;
+            if (SendingOtherMessage == null || SentOtherMessage == null) 
+                return Translation.NotValidRole;
+
+            SendingOtherMessageEventArgs sendingOtherMessageEventArgs = OnSendingOtherMessage(player, text);
+
+            if (sendingOtherMessageEventArgs.Response != null) 
+                return sendingOtherMessageEventArgs.Response;
+            
+            SentMessage?.Invoke(player, text);
+            SentOtherMessage?.Invoke(player, text);
+            
+            return null;
+        }
+
+        public static bool IsTextAllowed(string text)
+        {
+            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
+
+            return !validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => x == word));
         }
 
         public static SendingMessageEventArgs OnSendingMessage(Player player, string text)
@@ -104,10 +107,10 @@ namespace TextChat
             return ev;
         }
 
-        public static SendingGlobalMessageEventArgs OnSendingGlobalMessage(Player player, string text)
+        public static SendingOtherMessageEventArgs OnSendingOtherMessage(Player player, string text)
         {
-            SendingGlobalMessageEventArgs ev = new(player, text);
-            SendingGlobalMessage?.Invoke(ev);
+            SendingOtherMessageEventArgs ev = new(player, text);
+            SendingOtherMessage?.Invoke(ev);
             return ev;
         }
     }

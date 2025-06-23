@@ -16,20 +16,20 @@ namespace TextChat.RueI
         public override void Enable()
         {
             Instance = this;
-            Events.SendingGlobalMessage += OnSendingMessage;
-            Events.SentGlobalMessage += OnSentGlobalMessage;
+            Events.SendingOtherMessage += OnSendingMessage;
+            Events.SentOtherMessage += OnSentMessage;
             PlayerEvents.ChangingRole += OnChangingRole;
         }
 
         public override void Disable()
         {
             Instance = null;
-            Events.SendingGlobalMessage -= OnSendingMessage;
-            Events.SentGlobalMessage -= OnSentGlobalMessage;
+            Events.SendingOtherMessage -= OnSendingMessage;
+            Events.SentOtherMessage -= OnSentMessage;
             PlayerEvents.ChangingRole -= OnChangingRole;
         }
 
-        private void OnSendingMessage(SendingGlobalMessageEventArgs ev)
+        private void OnSendingMessage(SendingOtherMessageEventArgs ev)
         {
             DisplayDataStore store = ev.Player.GetDataStore<DisplayDataStore>();
             if (!store.Cooldown.IsReady)
@@ -40,13 +40,13 @@ namespace TextChat.RueI
             store.Cooldown.Trigger(Config!.MessageCooldown);
         }
 
-        private void OnChangingRole(PlayerChangingRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();
-
-        private void OnSentGlobalMessage(Player player, string text)
+        private void OnSentMessage(Player player, string text)
         {
             if(player.Role == RoleTypeId.Spectator) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, player.DisplayName) + text);
             else if(player.Team == Team.SCPs) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, player.DisplayName) + text);
         }
+
+        private void OnChangingRole(PlayerChangingRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();
 
         public override string Name { get; } = "TextChat.RueI";
         public override string Description { get; } = "Adds global chat functionality using RueI for hints.";

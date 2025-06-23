@@ -25,9 +25,8 @@ namespace TextChat.RueI
         public void Validate()
         {
             Display.Elements.Clear();
-            Display.Elements.Add(Player.Role == RoleTypeId.Spectator
-                ? HintManager.SpectatorElement
-                : HintManager.ScpElement);
+            if(!Player.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
+            if(Player.IsSCP) Display.Elements.Add(HintManager.ScpElement);
         }
 
         public static void UpdateAndValidateAll()

@@ -2,9 +2,9 @@ using LabApi.Features.Wrappers;
 
 namespace TextChat.EventArgs
 {
-    public class SendingGlobalMessageEventArgs : IDeniable
+    public class SendingOtherMessageEventArgs : IDeniable
     {
-        public SendingGlobalMessageEventArgs(Player player, string text)
+        public SendingOtherMessageEventArgs(Player player, string text)
         {
             Player = player;
             Text = text;
