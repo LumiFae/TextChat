@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat", "TextChat\TextCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat.RueI", "TextChat.RueI\TextChat.RueI.csproj", "{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextChat.Discord", "TextChat.Discord\TextChat.Discord.csproj", "{F2132335-D406-49C4-8859-EAAABC5875BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D567FE78-DD9D-42C7-8BD9-BF3C5FE87A4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2132335-D406-49C4-8859-EAAABC5875BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2132335-D406-49C4-8859-EAAABC5875BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2132335-D406-49C4-8859-EAAABC5875BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2132335-D406-49C4-8859-EAAABC5875BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
