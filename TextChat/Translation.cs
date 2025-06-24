@@ -13,5 +13,7 @@
         public string ContainsBadWord { get; set; } = "Your message contains words blocked by the server.";
 
         public string NotValidRole { get; set; } = "You are not a valid role to send a message";
+
+        public string NoContent { get; set; } = "You can not send an empty message.";
     }
 }

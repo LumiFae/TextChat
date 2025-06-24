@@ -14,8 +14,22 @@ namespace TextChat
                 response = "Only players can send messages.";
                 return false;
             }
+
+            if (arguments.Count < 1)
+            {
+                response = Plugin.Instance.Translation.NoContent;
+                return false;
+            }
             
-            string resp = Events.TrySendMessage(player, string.Join(" ", arguments));
+            string text = string.Join(" ", arguments).Trim();
+
+            if (string.IsNullOrEmpty(text))
+            {
+                response = Plugin.Instance.Translation.NoContent;
+                return false;
+            }
+            
+            string resp = Events.TrySendMessage(player, text);
             response = resp ?? Plugin.Instance.Translation.Successful;
             return resp == null;
         }

@@ -62,7 +62,7 @@ namespace TextChat
             if (sendingMsgEventArgs.Response != null) 
                 return sendingMsgEventArgs.Response;
             
-            text = sendingMsgEventArgs.Text;
+            text = sendingMsgEventArgs.Text.Trim();
             
             // prevents people from putting their own styles into the text
             text = $"<noparse>{text.Replace("</noparse>", "")}</noparse>";
