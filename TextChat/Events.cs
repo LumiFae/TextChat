@@ -52,8 +52,6 @@ namespace TextChat
         /// Invoked whenever a person that doesn't have an allowed role sends a message.
         /// </summary>
         public static event Action<SentOtherMessageEventArgs> SentOtherMessage;
-        
-        private static Regex WhitespaceRegex = new Regex(@"\s+");
 
         public static string TrySendMessage(Player player, string text)
         {
@@ -68,8 +66,7 @@ namespace TextChat
             text = sendingMsgEventArgs.Text.Trim();
 
             // prevents people from putting their own styles into the text
-            text = WhitespaceRegex.Replace(text, "");
-            text = $"<noparse>{Regex.Replace(text, "</noparse>", "", RegexOptions.IgnoreCase)}</noparse>";
+            text = $"<noparse>{Regex.Replace(text.Replace(@"\", @"\\"), "/noparse", "", RegexOptions.IgnoreCase).Replace("<>", "")}</noparse>";
 
             if (!IsTextAllowed(text))
             {
