@@ -1,7 +1,6 @@
 ﻿using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
-using PlayerRoles;
 using RueI.Displays;
 using RueI.Extensions;
 using TextChat.API.EventArgs;
