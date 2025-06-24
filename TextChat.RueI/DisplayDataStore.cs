@@ -9,12 +9,9 @@ namespace TextChat.RueI
     {
         public DisplayDataStore(Player player) : base(player)
         {
-            Player = player;
             Display = new(player.ReferenceHub);
             Validate();
         }
-
-        public readonly Player Player;
 
         public readonly Display Display;
 
@@ -23,8 +20,8 @@ namespace TextChat.RueI
         public void Validate()
         {
             Display.Elements.Clear();
-            if(!Player.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
-            if(Player.IsSCP) Display.Elements.Add(HintManager.ScpElement);
+            if(!Owner.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
+            if(Owner.IsSCP) Display.Elements.Add(HintManager.ScpElement);
         }
 
         public static void UpdateAndValidateAll()
