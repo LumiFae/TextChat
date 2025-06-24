@@ -68,11 +68,11 @@ namespace TextChat.RueI
 
         private void OnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase setting)
         {
-            if (setting != EnableDisableSetting && setting != TextSizeSetting) return;
+            if (setting.SettingId != EnableDisableSetting.SettingId && setting.SettingId != TextSizeSetting.SettingId) return;
             
             Player player = Player.Get(hub);
-            if (player == null) return;
-            if (player.IsAlive || !player.IsSCP) return;
+            
+            if (player == null || !CheckIfValidRole(player)) return;
                 
             DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
             store.Validate();
