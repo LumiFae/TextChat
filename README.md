@@ -25,7 +25,7 @@ Extra credits:
 - [SlejmUr](https://github.com/SlejmUr) for helping with syncing message rotation to the client, and some other component related tasks.
 - [Axwabo](https://github.com/Axwabo) for helping with the construction of the main component, and some optimisations.
 
-Developers:
+## Developers:
 Hi developers! 
 
 With this plugin I wanted to make it super simple for you all to add your own integrations to this, like how I do with some of my other plugins.
