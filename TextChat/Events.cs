@@ -13,6 +13,11 @@ namespace TextChat
         public static event Action<SendingMessageEventArgs> SendingMessage;
         
         /// <summary>
+        /// Invoked when a message is invalid by it containing a banned word.
+        /// </summary>
+        public static event Action<SendingInvalidMessageEventArgs> SendingInvalidMessage;
+        
+        /// <summary>
         /// Invoked whenever a message is sent.
         /// </summary>
         public static event Action<SentMessageEventArgs> SentMessage;
@@ -63,7 +68,10 @@ namespace TextChat
             text = $"<noparse>{text.Replace("</noparse>", "")}</noparse>";
 
             if (!IsTextAllowed(text))
+            {
+                SendingInvalidMessage?.Invoke(new (player, text));
                 return Translation.ContainsBadWord;
+            }
             
             if (player.IsAlive && !player.IsSCP)
             {
