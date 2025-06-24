@@ -21,7 +21,7 @@ This plugin tries to be as customisable as possible, but possibly has flaws for 
 
 Need support? Join my Discord: https://discord.gg/XBzuGbsNZK
 
-Extra credits:
+## Extra credits:
 - [SlejmUr](https://github.com/SlejmUr) for helping with syncing message rotation to the client, and some other component related tasks.
 - [Axwabo](https://github.com/Axwabo) for helping with the construction of the main component, and some optimisations.
 
