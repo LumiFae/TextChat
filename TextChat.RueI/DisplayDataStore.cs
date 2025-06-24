@@ -12,15 +12,14 @@ namespace TextChat.RueI
         {
             Player = player;
             Display = new(player.ReferenceHub);
-            Cooldown = new();
             Validate();
         }
 
-        public Player Player;
+        public readonly Player Player;
 
-        public Display Display;
+        public readonly Display Display;
 
-        public AbilityCooldown Cooldown;
+        public readonly AbilityCooldown Cooldown = new ();
 
         public void Validate()
         {
