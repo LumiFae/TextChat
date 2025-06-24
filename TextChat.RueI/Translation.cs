@@ -2,6 +2,10 @@
 {
     public class Translation
     {
+        public string Header { get; set; } = "TextChat Settings";
+
+        public string HeaderHint { get; set; } = "This will only modify settings inside of SCP and Spectator chats.";
+        
         public string ShouldShowSpectatorSelect { get; set; } = "Show Spectator Chat?";
 
         public string ShouldShowSpectatorSelectHint { get; set; } = "Whether to show the spectator chat.";
