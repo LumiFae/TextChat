@@ -69,7 +69,7 @@ namespace TextChat.RueI
 
         private static void OnSentMessage(SentOtherMessageEventArgs ev)
         {
-            if(ev.Player.Role == RoleTypeId.Spectator) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            if(!ev.Player.IsAlive) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
             else if(ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
         }
 
