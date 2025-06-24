@@ -30,8 +30,7 @@ namespace TextChat.RueI
 
         public static void UpdateAndValidateAll()
         {
-            foreach (Player player in Player.ReadyList.Where(player =>
-                         player.Role == RoleTypeId.Spectator || player.IsSCP))
+            foreach (Player player in Player.ReadyList)
             {
                 DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
                 store.Validate();
