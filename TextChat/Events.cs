@@ -1,4 +1,5 @@
-﻿using LabApi.Features.Wrappers;
+﻿using System.Text.RegularExpressions;
+using LabApi.Features.Wrappers;
 using TextChat.API.EventArgs;
 
 namespace TextChat
@@ -51,6 +52,8 @@ namespace TextChat
         /// Invoked whenever a person that doesn't have an allowed role sends a message.
         /// </summary>
         public static event Action<SentOtherMessageEventArgs> SentOtherMessage;
+        
+        private static Regex WhitespaceRegex = new Regex(@"\s+");
 
         public static string TrySendMessage(Player player, string text)
         {
@@ -65,7 +68,8 @@ namespace TextChat
             text = sendingMsgEventArgs.Text.Trim();
 
             // prevents people from putting their own styles into the text
-            text = $"<noparse>{text.Replace("</noparse>", "")}</noparse>";
+            text = WhitespaceRegex.Replace(text, "");
+            text = $"<noparse>{Regex.Replace(text, "</noparse>", "", RegexOptions.IgnoreCase)}</noparse>";
 
             if (!IsTextAllowed(text))
             {
