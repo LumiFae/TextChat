@@ -11,17 +11,17 @@ namespace TextChat.RueI
     public static class Events
     {
         public static Config Config => Plugin.Instance.Config!;
-        
+
         public static void Register()
         {
             // handle global hints
             TextChat.Events.SendingOtherMessage += OnSendingMessage;
             TextChat.Events.SentOtherMessage += OnSentMessage;
-            
+
             TextChat.Events.SendingProximityHint += OnSendingProximityHint;
-            
+
             ServerSpecificSettingsSync.ServerOnSettingValueReceived += OnSettingValueReceived;
-            
+
             PlayerEvents.ChangedRole += OnChangedRole;
         }
 
@@ -33,16 +33,17 @@ namespace TextChat.RueI
             ServerSpecificSettingsSync.ServerOnSettingValueReceived -= OnSettingValueReceived;
             PlayerEvents.ChangedRole -= OnChangedRole;
         }
-        
+
 
         private static void OnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase setting)
         {
-            if (setting.SettingId != Plugin.Instance.EnableDisableSetting.SettingId && setting.SettingId != Plugin.Instance.TextSizeSetting.SettingId) return;
-            
+            if (setting.SettingId != Plugin.Instance.EnableDisableSetting.SettingId &&
+                setting.SettingId != Plugin.Instance.TextSizeSetting.SettingId) return;
+
             Player player = Player.Get(hub);
-            
+
             if (player == null || !Plugin.CheckIfValidRole(player)) return;
-                
+
             DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
             store.Validate();
             store.Display.Update();
@@ -51,7 +52,8 @@ namespace TextChat.RueI
         private static void OnSendingProximityHint(SendingProximityHintEventArgs ev)
         {
             ev.IsAllowed = false;
-            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.HintContent, 300, TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new ());
+            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.HintContent, 300,
+                TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new());
         }
 
         private static void OnSendingMessage(SendingOtherMessageEventArgs ev)
@@ -63,13 +65,14 @@ namespace TextChat.RueI
                 ev.Response = "You are sending too many messages!";
                 return;
             }
+
             store.Cooldown.Trigger(Config!.MessageCooldown);
         }
 
         private static void OnSentMessage(SentOtherMessageEventArgs ev)
         {
-            if(!ev.Player.IsAlive) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
-            else if(ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            if (!ev.Player.IsAlive) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            else if (ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
         }
 
         private static void OnChangedRole(PlayerChangedRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();

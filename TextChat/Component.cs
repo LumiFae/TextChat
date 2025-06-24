@@ -13,11 +13,11 @@ namespace TextChat
     public class Component : MonoBehaviour
     {
         public static Config Config => Plugin.Instance.Config;
-        
-        private static readonly Dictionary<Player, List<string>> Queue = new ();
-        
-        private static readonly List<Component> Components = new ();
-        
+
+        private static readonly Dictionary<Player, List<string>> Queue = new();
+
+        private static readonly List<Component> Components = new();
+
         private TextToy _toy;
 
         private Player _player;
@@ -43,13 +43,13 @@ namespace TextChat
 
             texts.Remove(_rawText);
             string nextMessage = Queue[_player].FirstOrDefault();
-            if(nextMessage != null)
+            if (nextMessage != null)
                 Spawn(_player, nextMessage);
-            else 
+            else
                 Queue.Remove(_player);
             _toy.Destroy();
         }
-        
+
         public void Update()
         {
             if (_toy.IsDestroyed) return;
@@ -60,6 +60,7 @@ namespace TextChat
                     player.SendFakeSyncVar(_toy.Base, 4, Vector3.zero);
                     continue;
                 }
+
                 player.SendFakeSyncVar(_toy.Base, 4, Vector3.one);
                 FaceTowardsPlayer(player);
             }
@@ -71,7 +72,7 @@ namespace TextChat
             direction.y = 0;
             Quaternion rotation = Quaternion.LookRotation(-direction);
             _transform.rotation = rotation;
-            
+
             observer.SendFakeSyncVar(_toy.Base, 2, _transform.localRotation);
         }
 
@@ -79,7 +80,7 @@ namespace TextChat
         {
             if (!Queue.TryGetValue(player, out List<string> texts))
             {
-                Queue.Add(player, new ());
+                Queue.Add(player, new());
                 Queue[player].Add(text);
                 Spawn(player, text);
             }
@@ -92,37 +93,38 @@ namespace TextChat
         private static void Spawn(Player player, string text)
         {
             if (!player.IsAlive || player.IsSCP) return;
-            
-            TextToy toy = TextToy.Create(new (0, Config.HeightOffset, 0), player.GameObject.transform);
+
+            TextToy toy = TextToy.Create(new(0, Config.HeightOffset, 0), player.GameObject.transform);
             toy.TextFormat = $"<size={Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
-            
+
             Component comp = toy.GameObject.AddComponent<Component>();
-            
+
             comp._toy = toy;
             comp._player = player;
             comp._rawText = text;
-            
+
             Components.Add(comp);
-            
+
             toy.Base.enabled = false;
-            
+
             player.Connection.Send(new ObjectDestroyMessage
             {
                 netId = toy.Base.netId,
             });
 
-            SendingProximityHintEventArgs ev = Events.OnSendingProximityHint(player, text, string.Format(Plugin.Instance.Translation.CurrentMessage, text));
-            
-            if(ev.IsAllowed)
+            SendingProximityHintEventArgs ev =
+                Events.OnSendingProximityHint(player, text, string.Format(Plugin.Instance.Translation.CurrentMessage, text));
+
+            if (ev.IsAllowed)
                 player.SendHint(ev.HintContent, Config.MessageExpireTime);
 
             Events.OnSpawnedProximityChat(player, text);
         }
 
         public static bool CanSpawn(RoleTypeId role) => role.IsAlive() && !role.IsScp();
-        
+
         public static bool ContainsPlayer(Player player) => Queue.ContainsKey(player);
-        
+
         public static void RemovePlayer(Player player)
         {
             Queue.Remove(player);

@@ -15,13 +15,13 @@ namespace TextChat.RueI
 
         public readonly Display Display;
 
-        public readonly AbilityCooldown Cooldown = new ();
+        public readonly AbilityCooldown Cooldown = new();
 
         public void Validate()
         {
             Display.Elements.Clear();
-            if(!Owner.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
-            if(Owner.IsSCP) Display.Elements.Add(HintManager.ScpElement);
+            if (!Owner.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
+            if (Owner.IsSCP) Display.Elements.Add(HintManager.ScpElement);
         }
 
         public static void UpdateAndValidateAll()

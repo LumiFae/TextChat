@@ -3,7 +3,7 @@
     public class Translation
     {
         public string Prefix { get; set; } = "<color=green>💬: </color>";
-        
+
         public string Successful { get; set; } = "Successfully sent message.";
 
         public string CurrentMessage { get; set; } = "Current message:\n{0}";

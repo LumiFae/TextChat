@@ -9,7 +9,7 @@ namespace TextChat.API.EventArgs
             Player = player;
             Text = text;
         }
-        
+
         public Player Player { get; }
         public string Text { get; }
         public string Response { get; set; }

@@ -10,10 +10,10 @@ namespace TextChat.API.EventArgs
             Text = text;
             HintContent = hintContent;
         }
-        
+
         public Player Player { get; }
         public string Text { get; }
-        
+
         public string HintContent { get; set; }
 
         public bool IsAllowed { get; set; } = true;

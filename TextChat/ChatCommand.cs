@@ -20,7 +20,7 @@ namespace TextChat
                 response = Plugin.Instance.Translation.NoContent;
                 return false;
             }
-            
+
             string text = string.Join(" ", arguments).Trim();
 
             if (string.IsNullOrEmpty(text))
@@ -28,7 +28,7 @@ namespace TextChat
                 response = Plugin.Instance.Translation.NoContent;
                 return false;
             }
-            
+
             string resp = Events.TrySendMessage(player, text);
             response = resp ?? Plugin.Instance.Translation.Successful;
             return resp == null;

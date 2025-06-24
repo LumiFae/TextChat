@@ -11,46 +11,46 @@ namespace TextChat
         public Config Config { get; private set; }
 
         public Translation Translation { get; private set; }
-        
+
         public override void Enable()
         {
             Instance = this;
-            
+
             PlayerEvents.ChangingRole += OnChangingRole;
         }
 
         public override void Disable()
         {
             Instance = null!;
-            
+
             PlayerEvents.ChangingRole -= OnChangingRole;
         }
 
         private void OnChangingRole(PlayerChangingRoleEventArgs ev)
         {
-            if(!Component.CanSpawn(ev.NewRole) && Component.ContainsPlayer(ev.Player))
+            if (!Component.CanSpawn(ev.NewRole) && Component.ContainsPlayer(ev.Player))
                 Component.RemovePlayer(ev.Player);
         }
 
         public override void LoadConfigs()
         {
             this.TryLoadConfig("config.yml", out Config config);
-            Config = 
-                config ?? 
+            Config =
+                config ??
                 new Config();
-            
+
             this.TryLoadConfig("translation.yml", out Translation translation);
-            Translation = 
-                translation ?? 
+            Translation =
+                translation ??
                 new Translation();
-            
+
             base.LoadConfigs();
         }
 
         public override string Name { get; } = "TextChat";
         public override string Description { get; } = "Adds text chat functionality to global and proximity areas.";
         public override string Author { get; } = "LumiFae";
-        public override Version Version { get; } = new (1, 0, 0);
-        public override Version RequiredApiVersion { get; } = new (1, 0, 2);
+        public override Version Version { get; } = new(1, 0, 0);
+        public override Version RequiredApiVersion { get; } = new(1, 0, 2);
     }
 }
