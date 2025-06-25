@@ -6,6 +6,8 @@ namespace TextChat
     [CommandHandler(typeof(ClientCommandHandler))]
     public class ChatCommand : ICommand
     {
+        private static Config Config => Plugin.Instance.Config;
+        
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player player = Player.Get(sender);
@@ -30,11 +32,10 @@ namespace TextChat
             }
 
             string resp = Events.TrySendMessage(player, text);
-            response = resp ?? Plugin.Instance.Translation.Successful;
-            return resp == null;
             
             Logger.Debug($"Player {player} has executed the chat command with {text}. The command {(resp == null ? "succeeded" : $"failed with the error {resp}")}", Config.Debug);
             
+            return !Config.CanFail || resp == null;
         }
 
         public string Command { get; } = "chat";

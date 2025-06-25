@@ -17,6 +17,9 @@ namespace TextChat
         [Description("A list of words/multiple words that are banned")]
         public string[] BannedWords { get; set; } = Array.Empty<string>();
 
+        [Description("This option tells the client whether their command has failed if true. If false then it won't say it failed, but will continue to show the right translation.")]
+        public bool CanFail { get; set; } = true;
+
         [Description("This option enables debug logging for the plugin, good for debugging issues.")]
         public bool Debug { get; set; } = false;
     }
