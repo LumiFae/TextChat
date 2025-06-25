@@ -40,7 +40,7 @@ namespace TextChat
         
         public static bool IsTextAllowed(string text)
         {
-            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "").Replace("'", "");
+            string validationText = text.Replace(".", "").Replace(",", "").Replace("?", "").Replace("'", "");
             
             if (validationText.Split(' ').Any(word => BannedWordRegex.Any(x => DoesWordMatch(word, x)))) return false;
 
