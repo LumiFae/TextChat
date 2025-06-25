@@ -1,4 +1,5 @@
 ﻿using CommandSystem;
+using LabApi.Features.Console;
 using LabApi.Features.Wrappers;
 
 namespace TextChat
@@ -35,6 +36,7 @@ namespace TextChat
             
             Logger.Debug($"Player {player} has executed the chat command with {text}. The command {(resp == null ? "succeeded" : $"failed with the error {resp}")}", Config.Debug);
             
+            response = resp ?? string.Format(Plugin.Instance.Translation.Successful, text);
             return !Config.CanFail || resp == null;
         }
 
