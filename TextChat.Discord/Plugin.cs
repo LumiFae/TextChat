@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Net.Http;
-using System.Text.Json;
+using System.Text;
 using LabApi.Features.Wrappers;
 using LabApi.Loader;
 using LabApi.Loader.Features.Plugins;
@@ -83,13 +83,12 @@ namespace TextChat.Discord
 
         private void SendMessage(HttpClient client, string toFormat, Player player, string text)
         {
-            var data = new
-            {
-                content = string.Format(toFormat, player.Nickname, player.UserId, text.Replace("<noparse>", "").Replace("</noparse>", ""))
-            };
-
-            StringContent content = new(JsonSerializer.Serialize(data));
-            content.Headers.ContentType = new("application/json");
+            string contentValue = string.Format(toFormat, player.Nickname, player.UserId, text.Replace("<noparse>", "").Replace("</noparse>", ""));
+            string escapedContent = contentValue.Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
+            
+            string jsonString = $"{{\"content\":\"{escapedContent}\"}}";
+            
+            StringContent content = new (jsonString, Encoding.UTF8, "application/json");
 
             client.PostAsync("", content);
         }
