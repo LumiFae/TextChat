@@ -22,7 +22,7 @@ namespace TextChat
         [Description("A list of regex that every message will be checked for, and if matches, fails. Default regex here checks if the message contains characters that aren't normal English characters.")]
         public string[] BannedRegex { get; set; } = new []
         {
-            @"[^a-zA-Z0-9\s]"
+            @"[^a-zA-Z0-9\s,.!?']"
         };
 
         [Description("This option tells the client whether their command has failed if true. If false then it won't say it failed, but will continue to show the right translation.")]

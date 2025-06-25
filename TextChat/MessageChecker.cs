@@ -44,7 +44,7 @@ namespace TextChat
             
             if (validationText.Split(' ').Any(word => BannedWordRegex.Any(x => DoesWordMatch(word, x)))) return false;
 
-            return !BannedRegex.Any(regex => regex.IsMatch(validationText));
+            return !BannedRegex.Any(regex => regex.IsMatch(text));
         }
         
         public static bool DoesWordMatch(string word, Regex matcher) => matcher.IsMatch(word);
