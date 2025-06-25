@@ -5,26 +5,34 @@ namespace TextChat
 {
     public static class MessageChecker
     {
+        private static Config Config => Plugin.Instance.Config;
+        
         private static List<Regex> BannedWordRegex { get; set; }
         private static readonly Regex NoParseRegex = new("/noparse", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static List<Regex> BannedRegex { get; set; }
 
         public static void Register()
         {
-            BannedWordRegex = Plugin.Instance.Config.BannedWords.Select(matcher =>
+            BannedWordRegex = Config.BannedWords.Select(matcher =>
             {
-                Logger.Debug($"Creating a regex from {matcher}.", Plugin.Instance.Config.Debug);
+                Logger.Debug($"Creating a regex from {matcher}.", Config.Debug);
                 matcher = Regex.Escape(matcher);
                 matcher = matcher.Replace(@"\*", ".*");
                 matcher = $"^{matcher}$";
 
                 return new Regex(matcher, RegexOptions.IgnoreCase | RegexOptions.Compiled);
             }).ToList();
+
+            BannedRegex = Config.BannedRegex.Select(regex => new Regex(regex, RegexOptions.Compiled)).ToList();
         }
 
         public static void Unregister()
         {
             BannedWordRegex.Clear();
             BannedWordRegex = null;
+            
+            BannedRegex.Clear();
+            BannedRegex = null;
         }
 
         public static string NoParse(string text) =>
@@ -32,9 +40,11 @@ namespace TextChat
         
         public static bool IsTextAllowed(string text)
         {
-            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
+            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "").Replace("'", "");
             
-            return !validationText.Split(' ').Any(word => BannedWordRegex.Any(x => DoesWordMatch(word, x)));
+            if (validationText.Split(' ').Any(word => BannedWordRegex.Any(x => DoesWordMatch(word, x)))) return false;
+
+            return !BannedRegex.Any(regex => regex.IsMatch(validationText));
         }
         
         public static bool DoesWordMatch(string word, Regex matcher) => matcher.IsMatch(word);
