@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using LabApi.Features.Console;
 using LabApi.Features.Wrappers;
 using TextChat.API.EventArgs;
 
@@ -65,14 +66,14 @@ namespace TextChat
 
             text = sendingMsgEventArgs.Text.Trim();
 
-            // prevents people from putting their own styles into the text
-            text = $"<noparse>{Regex.Replace(text.Replace(@"\", @"\\"), "/noparse", "", RegexOptions.IgnoreCase).Replace("<>", "")}</noparse>";
-
             if (!IsTextAllowed(text))
             {
                 SendingInvalidMessage?.Invoke(new(player, text));
                 return Translation.ContainsBadWord;
             }
+
+            // prevents people from putting their own styles into the text
+            text = $"<noparse>{Regex.Replace(text.Replace(@"\", @"\\"), "/noparse", "", RegexOptions.IgnoreCase).Replace("<>", "")}</noparse>";
 
             if (player.IsAlive && !player.IsSCP)
             {
@@ -107,8 +108,20 @@ namespace TextChat
         public static bool IsTextAllowed(string text)
         {
             string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
+            
+            return !validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => DoesWordMatch(word, x)));
+        }
 
-            return !validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => x == word));
+        public static bool DoesWordMatch(string word, string matcher)
+        {
+            word = word.ToLowerInvariant();
+            
+            matcher = matcher.ToLowerInvariant();
+            matcher = Regex.Escape(matcher);
+            matcher = matcher.Replace(@"\*", ".*");
+            matcher = $"^{matcher}$";
+
+            return Regex.IsMatch(word, matcher);
         }
 
         public static SendingMessageEventArgs OnSendingMessage(Player player, string text)
