@@ -33,3 +33,13 @@ With this plugin I wanted to make it super simple for you all to add your own in
 Here there is a plentiful list of events within TextChat.Events that you can hook onto, all allowing you to do your own things.
 
 I hope to make this even more customisable in the future, so keep an eye out for that!
+
+## Troubleshooting
+
+#### I am getting an error when TextChat.Discord is installed?
+If your error looks like this 
+
+![error](https://github.com/LumiFae/TextChat/blob/master/imgs/textchat-discord-error.png)
+
+then you need to go to `SCPSL_Data/Managed` and delete `System.Text.Json.dll` and `System.Text.Encodings.Web` 
+and validate your game files.
