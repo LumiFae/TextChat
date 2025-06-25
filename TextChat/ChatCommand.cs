@@ -32,6 +32,9 @@ namespace TextChat
             string resp = Events.TrySendMessage(player, text);
             response = resp ?? Plugin.Instance.Translation.Successful;
             return resp == null;
+            
+            Logger.Debug($"Player {player} has executed the chat command with {text}. The command {(resp == null ? "succeeded" : $"failed with the error {resp}")}", Config.Debug);
+            
         }
 
         public string Command { get; } = "chat";

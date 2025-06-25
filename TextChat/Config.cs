@@ -16,5 +16,8 @@ namespace TextChat
 
         [Description("A list of words/multiple words that are banned")]
         public string[] BannedWords { get; set; } = Array.Empty<string>();
+
+        [Description("This option enables debug logging for the plugin, good for debugging issues.")]
+        public bool Debug { get; set; } = false;
     }
 }

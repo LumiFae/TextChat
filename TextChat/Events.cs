@@ -7,6 +7,8 @@ namespace TextChat
 {
     public static class Events
     {
+        private static Config Config => Plugin.Instance.Config;
+        
         private static Translation Translation => Plugin.Instance.Translation;
 
         /// <summary>
@@ -66,17 +68,18 @@ namespace TextChat
 
             text = sendingMsgEventArgs.Text.Trim();
 
-            if (!IsTextAllowed(text))
+            if (!MessageChecker.IsTextAllowed(text))
             {
                 SendingInvalidMessage?.Invoke(new(player, text));
-                return Translation.ContainsBadWord;
+                return string.Format(Translation.ContainsBadWord, text);
             }
 
             // prevents people from putting their own styles into the text
-            text = $"<noparse>{Regex.Replace(text.Replace(@"\", @"\\"), "/noparse", "", RegexOptions.IgnoreCase).Replace("<>", "")}</noparse>";
+            text = MessageChecker.NoParse(text);
 
             if (player.IsAlive && !player.IsSCP)
             {
+                Logger.Debug($"{player} is sending a proximity chat message.", Config.Debug);
                 SendingProximityMessageEventArgs sendingProximityMessageEventArgs =
                     OnSendingProximityMessage(player, text);
 
@@ -94,6 +97,8 @@ namespace TextChat
             if (SendingOtherMessage == null)
                 return Translation.NotValidRole;
 
+            Logger.Debug($"{player} is sending a other chat message.", Config.Debug);
+            
             SendingOtherMessageEventArgs sendingOtherMessageEventArgs = OnSendingOtherMessage(player, text);
 
             if (sendingOtherMessageEventArgs.Response != null)
@@ -103,25 +108,6 @@ namespace TextChat
             SentOtherMessage?.Invoke(new(player, text));
 
             return null;
-        }
-
-        public static bool IsTextAllowed(string text)
-        {
-            string validationText = text.Replace(".", "").Replace(",", "").Replace("!", "").Replace("?", "");
-            
-            return !validationText.Split(' ').Any(word => Plugin.Instance.Config.BannedWords.Any(x => DoesWordMatch(word, x)));
-        }
-
-        public static bool DoesWordMatch(string word, string matcher)
-        {
-            word = word.ToLowerInvariant();
-            
-            matcher = matcher.ToLowerInvariant();
-            matcher = Regex.Escape(matcher);
-            matcher = matcher.Replace(@"\*", ".*");
-            matcher = $"^{matcher}$";
-
-            return Regex.IsMatch(word, matcher);
         }
 
         public static SendingMessageEventArgs OnSendingMessage(Player player, string text)

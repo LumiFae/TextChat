@@ -7,6 +7,7 @@ using TextChat.API.EventArgs;
 using TextChat.API.Extensions;
 using UnityEngine;
 using Utils.NonAllocLINQ;
+using Logger = LabApi.Features.Console.Logger;
 
 namespace TextChat
 {
@@ -28,6 +29,7 @@ namespace TextChat
 
         public void Awake()
         {
+            Logger.Debug($"Component for {_player} with the text of {_rawText} has spawned.", Config.Debug);
             _transform = transform;
             Timing.CallDelayed(Config.MessageExpireTime, Destroy, gameObject);
         }
@@ -80,12 +82,14 @@ namespace TextChat
         {
             if (!Queue.TryGetValue(player, out List<string> texts))
             {
+                Logger.Debug($"Sending {player}'s message with {text}", Config.Debug);
                 Queue.Add(player, new());
                 Queue[player].Add(text);
                 Spawn(player, text);
             }
             else
             {
+                Logger.Debug($"Adding {text} to {player}'s queue", Config.Debug);
                 texts.Add(text);
             }
         }
@@ -94,6 +98,8 @@ namespace TextChat
         {
             if (!player.IsAlive || player.IsSCP) return;
 
+            Logger.Debug($"Spawning {player}'s {text} component", Config.Debug);
+            
             TextToy toy = TextToy.Create(new(0, Config.HeightOffset, 0), player.GameObject.transform);
             toy.TextFormat = $"<size={Config.TextSize}em>{Plugin.Instance.Translation.Prefix}{text}</size>";
 

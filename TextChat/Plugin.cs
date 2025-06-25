@@ -16,6 +16,8 @@ namespace TextChat
         {
             Instance = this;
 
+            MessageChecker.Register();
+            
             PlayerEvents.ChangingRole += OnChangingRole;
         }
 
@@ -23,6 +25,8 @@ namespace TextChat
         {
             Instance = null!;
 
+            MessageChecker.Unregister();
+            
             PlayerEvents.ChangingRole -= OnChangingRole;
         }
 
