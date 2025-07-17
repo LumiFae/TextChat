@@ -1,6 +1,7 @@
 using LabApi.Features.Wrappers;
 using LabApi.Loader;
 using LabApi.Loader.Features.Plugins;
+using RueI;
 using UnityEngine;
 using UserSettings.ServerSpecific;
 
@@ -20,6 +21,8 @@ namespace TextChat.RueI
         {
             Instance = this;
 
+            RueIMain.EnsureInit();
+            
             EnableDisableSetting = new(null, Translation.ShouldShowSpectatorSelect, Translation.Yes, Translation.No,
                 hint: Translation.ShouldShowSpectatorSelectHint);
             TextSizeSetting = new(null, Translation.TextSizeSlider, Mathf.Min(Config!.FontSize, 18), Mathf.Max(Config!.FontSize, 38),
