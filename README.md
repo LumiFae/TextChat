@@ -17,6 +17,8 @@ so if you are interested in that, keep an eye out!
 ## Extra Info
 This plugin tries to be as customisable as possible, but possibly has flaws for it's initial versions. If you have any issues please make a GitHub issue.
 
+Also, if you plan on using TextChat.RueI, make sure you install RueI itself from [Rue's GitHub](https://github.com/pawslee/RueI/releases/latest)
+
 ## Support
 
 Need support? Join my Discord: https://discord.gg/XBzuGbsNZK
