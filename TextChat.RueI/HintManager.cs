@@ -42,14 +42,14 @@ namespace TextChat.RueI
             });
         }
 
-        private static string Content<T>(List<T> list, Tuple<SSTwoButtonsSetting, SSSliderSetting> settings)
+        private static string Content<T>(List<T> list, (SSTwoButtonsSetting, SSSliderSetting)? settings)
         {
             if (settings == null)
                 return string.Empty;
 
             StringBuilder builder = StringBuilderPool.Shared.Rent();
 
-            int fontSize = settings.Item2.SyncIntValue;
+            int fontSize = settings.Value.Item2.SyncIntValue;
 
             builder.SetAlignment(Config.Alignment);
             builder.SetSize(fontSize);
@@ -69,15 +69,15 @@ namespace TextChat.RueI
 
         private static string SpectatorContent(DisplayCore core)
         {
-            Tuple<SSTwoButtonsSetting, SSSliderSetting> settings = GetSettingsFromPlayer(core.Hub);
+            (SSTwoButtonsSetting, SSSliderSetting)? settings = GetSettingsFromPlayer(core.Hub);
 
-            if (settings == null || settings.Item1.SyncIsB)
+            if (settings == null || settings.Value.Item1.SyncIsB)
                 return string.Empty;
 
             return Content(ActiveSpectatorMessages, settings);
         }
 
-        public static Tuple<SSTwoButtonsSetting, SSSliderSetting> GetSettingsFromPlayer(ReferenceHub hub)
+        public static (SSTwoButtonsSetting, SSSliderSetting)? GetSettingsFromPlayer(ReferenceHub hub)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace TextChat.RueI
                 if (!ServerSpecificSettingsSync.TryGetSettingOfUser(hub, Plugin.Instance.TextSizeSetting.SettingId, out SSSliderSetting slider))
                     return null;
 
-                return new(setting, slider);
+                return (setting, slider);
             }
             catch (NullReferenceException)
             {
