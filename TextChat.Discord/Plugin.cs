@@ -96,7 +96,7 @@ namespace TextChat.Discord
         public override string Name { get; } = "TextChat.Discord";
         public override string Description { get; } = "Discord webhook logging for TextChat";
         public override string Author { get; } = "LumiFae";
-        public override Version Version { get; } = new(1, 1, 0);
+        public override Version Version { get; } = new(1, 1, 1);
         public override Version RequiredApiVersion { get; } = new(1, 0, 2);
     }
 
