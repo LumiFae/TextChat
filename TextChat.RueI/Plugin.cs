@@ -58,7 +58,7 @@ namespace TextChat.RueI
         public override string Name { get; } = "TextChat.RueI";
         public override string Description { get; } = "Adds global chat functionality using RueI for hints.";
         public override string Author { get; } = "LumiFae";
-        public override Version Version { get; } = new(1, 1, 1);
+        public override Version Version { get; } = new(1, 2, 0);
         public override Version RequiredApiVersion { get; } = new(1, 0, 2);
     }
 }

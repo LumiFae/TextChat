@@ -54,7 +54,7 @@ namespace TextChat
         public override string Name { get; } = "TextChat";
         public override string Description { get; } = "Adds text chat functionality to global and proximity areas.";
         public override string Author { get; } = "LumiFae";
-        public override Version Version { get; } = new(1, 1, 1);
+        public override Version Version { get; } = new(1, 2, 0);
         public override Version RequiredApiVersion { get; } = new(1, 0, 2);
     }
 }
