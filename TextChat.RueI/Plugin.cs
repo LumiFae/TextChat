@@ -20,8 +20,6 @@ namespace TextChat.RueI
         public override void Enable()
         {
             Instance = this;
-
-            RueIMain.EnsureInit();
             
             EnableDisableSetting = new(null, Translation.ShouldShowSpectatorSelect, Translation.Yes, Translation.No,
                 hint: Translation.ShouldShowSpectatorSelectHint);

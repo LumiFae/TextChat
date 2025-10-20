@@ -1,36 +1,58 @@
 using LabApi.Features.Stores;
 using LabApi.Features.Wrappers;
 using PlayerRoles.Subroutines;
-using RueI.Displays;
+using RueI.API;
+using RueI.API.Elements;
 
 namespace TextChat.RueI
 {
-    internal sealed class DisplayDataStore : CustomDataStore
+    public sealed class DisplayDataStore
     {
-        public DisplayDataStore(Player player) : base(player)
-        {
-            Display = new(player.ReferenceHub);
-            Validate();
-        }
+        private static Dictionary<Player, DisplayDataStore> _dictionary = new();
 
-        public readonly Display Display;
+        public static DisplayDataStore Get(Player player) =>
+            _dictionary.GetOrAdd(player, () => new DisplayDataStore(player));
+
+        internal static void Destroy(Player player) => _dictionary.Remove(player);
+        
+        public static Tag Tag = new("TextChat Global Chat");
+
+        private DisplayDataStore(Player player)
+        {
+            Owner = player;
+        }
+        
+        public Player Owner { get; }
 
         public readonly AbilityCooldown Cooldown = new();
 
         public void Validate()
         {
-            Display.Elements.Clear();
-            if (!Owner.IsAlive) Display.Elements.Add(HintManager.SpectatorElement);
-            if (Owner.IsSCP) Display.Elements.Add(HintManager.ScpElement);
+            RueDisplay display = RueDisplay.Get(Owner);
+            if (!Owner.IsAlive) display.Show(Tag, HintManager.SpectatorElement);
+            else if (Owner.IsSCP) display.Show(Tag, HintManager.ScpElement);
+            else display.Remove(Tag);
         }
 
-        public static void UpdateAndValidateAll()
+        public static void UpdateAndValidateScps()
         {
             foreach (Player player in Player.ReadyList)
             {
-                DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
-                store.Validate();
-                store.Display.Update();
+                if (!player.IsSCP)
+                    return;
+                
+                RueDisplay.Get(player).Update();
+            }
+        }
+
+        public static void UpdateAndValidateSpectators()
+        {
+            foreach (Player player in Player.ReadyList)
+            {
+                if (player.IsAlive)
+                    return;
+                
+                RueDisplay.Get(player).Update();
             }
         }
     }

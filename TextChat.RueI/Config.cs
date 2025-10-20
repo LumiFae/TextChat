@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using RueI.Extensions.HintBuilding;
+using RueI.Utils.Enums;
 
 namespace TextChat.RueI
 {
@@ -18,7 +18,7 @@ namespace TextChat.RueI
         public int FontSize { get; set; } = 28;
 
         [Description("The alignment of the hint.")]
-        public HintBuilding.AlignStyle Alignment { get; set; } = HintBuilding.AlignStyle.Left;
+        public AlignStyle Alignment { get; set; } = AlignStyle.Left;
 
         [Description("The vertical position of the hint.")]
         public int VerticalPosition { get; set; } = 200;

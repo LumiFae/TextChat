@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using MEC;
 using NorthwoodLib.Pools;
-using RueI.Displays;
-using RueI.Elements;
-using RueI.Extensions.HintBuilding;
+using RueI.API.Elements;
+using RueI.API.Elements.Enums;
+using RueI.Utils;
 using UserSettings.ServerSpecific;
 
 namespace TextChat.RueI
@@ -12,33 +12,40 @@ namespace TextChat.RueI
     {
         private static Config Config => Plugin.Instance.Config!;
 
-        private static readonly List<string> ActiveSpectatorMessages = new();
-        private static readonly List<string> ActiveScpMessages = new();
+        private static readonly List<string> ActiveSpectatorMessages = [];
+        private static readonly List<string> ActiveScpMessages = [];
 
-        internal static readonly DynamicElement ScpElement = new(ScpContent, Config.VerticalPosition);
-        internal static readonly DynamicElement SpectatorElement = new(SpectatorContent, Config.VerticalPosition);
+        internal static readonly DynamicElement ScpElement = new(Config.VerticalPosition, ScpContent)
+        {
+            VerticalAlign = VerticalAlign.Up
+        };
+        
+        internal static readonly DynamicElement SpectatorElement = new(Config.VerticalPosition, SpectatorContent)
+        {
+            VerticalAlign = VerticalAlign.Up
+        };
 
         internal static void AddSpectatorChatMessage(string text)
         {
             ActiveSpectatorMessages.Add(text);
-            DisplayDataStore.UpdateAndValidateAll();
+            DisplayDataStore.UpdateAndValidateSpectators();
 
             Timing.CallDelayed(Config.MessageExpireTime, () =>
             {
                 ActiveSpectatorMessages.Remove(text);
-                DisplayDataStore.UpdateAndValidateAll();
+                DisplayDataStore.UpdateAndValidateSpectators();
             });
         }
 
         internal static void AddScpChatMessage(string text)
         {
             ActiveScpMessages.Add(text);
-            DisplayDataStore.UpdateAndValidateAll();
+            DisplayDataStore.UpdateAndValidateScps();
 
             Timing.CallDelayed(Config.MessageExpireTime, () =>
             {
                 ActiveScpMessages.Remove(text);
-                DisplayDataStore.UpdateAndValidateAll();
+                DisplayDataStore.UpdateAndValidateScps();
             });
         }
 
@@ -53,23 +60,20 @@ namespace TextChat.RueI
 
             builder.SetAlignment(Config.Alignment);
             builder.SetSize(fontSize);
-            // 40.665 is RueI's default line height
-            builder.AddVOffset((list.Count - 1) * 40.665f);
 
             builder.Append(string.Join("\n", list));
 
-            builder.CloseVOffset();
             builder.CloseSize();
             builder.CloseAlign();
 
             return StringBuilderPool.Shared.ToStringReturn(builder);
         }
 
-        private static string ScpContent(DisplayCore core) => Content(ActiveScpMessages, GetSettingsFromPlayer(core.Hub));
+        private static string ScpContent(ReferenceHub hub) => Content(ActiveScpMessages, GetSettingsFromPlayer(hub));
 
-        private static string SpectatorContent(DisplayCore core)
+        private static string SpectatorContent(ReferenceHub hub)
         {
-            (SSTwoButtonsSetting, SSSliderSetting)? settings = GetSettingsFromPlayer(core.Hub);
+            (SSTwoButtonsSetting, SSSliderSetting)? settings = GetSettingsFromPlayer(hub);
 
             if (settings == null || settings.Value.Item1.SyncIsB)
                 return string.Empty;

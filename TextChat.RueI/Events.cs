@@ -1,8 +1,8 @@
 ﻿using LabApi.Events.Arguments.PlayerEvents;
 using LabApi.Events.Handlers;
 using LabApi.Features.Wrappers;
-using RueI.Displays;
-using RueI.Extensions;
+using RueI.API;
+using RueI.API.Elements;
 using TextChat.API.EventArgs;
 using UserSettings.ServerSpecific;
 
@@ -23,6 +23,8 @@ namespace TextChat.RueI
             ServerSpecificSettingsSync.ServerOnSettingValueReceived += OnSettingValueReceived;
 
             PlayerEvents.ChangedRole += OnChangedRole;
+
+            PlayerEvents.Left += OnLeft;
         }
 
         public static void Unregister()
@@ -32,6 +34,7 @@ namespace TextChat.RueI
             TextChat.Events.SendingProximityHint -= OnSendingProximityHint;
             ServerSpecificSettingsSync.ServerOnSettingValueReceived -= OnSettingValueReceived;
             PlayerEvents.ChangedRole -= OnChangedRole;
+            PlayerEvents.Left -= OnLeft;
         }
 
 
@@ -44,37 +47,44 @@ namespace TextChat.RueI
 
             if (player == null || !Plugin.CheckIfValidRole(player)) return;
 
-            DisplayDataStore store = player.GetDataStore<DisplayDataStore>();
+            DisplayDataStore store = DisplayDataStore.Get(player);
             store.Validate();
-            store.Display.Update();
         }
 
         private static void OnSendingProximityHint(SendingProximityHintEventArgs ev)
         {
             ev.IsAllowed = false;
-            DisplayCore.Get(ev.Player.ReferenceHub).SetElemTemp(ev.HintContent, 300,
-                TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime), new());
+            RueDisplay.Get(ev.Player.ReferenceHub).Show(new BasicElement(300, ev.HintContent),
+                TimeSpan.FromSeconds(TextChat.Plugin.Instance.Config.MessageExpireTime));
         }
 
         private static void OnSendingMessage(SendingOtherMessageEventArgs ev)
         {
             if (!Plugin.CheckIfValidRole(ev.Player)) return;
-            DisplayDataStore store = ev.Player.GetDataStore<DisplayDataStore>();
+            DisplayDataStore store = DisplayDataStore.Get(ev.Player);
             if (!store.Cooldown.IsReady)
             {
                 ev.Response = "You are sending too many messages!";
                 return;
             }
 
-            store.Cooldown.Trigger(Config!.MessageCooldown);
+            store.Cooldown.Trigger(Config.MessageCooldown);
         }
 
         private static void OnSentMessage(SentOtherMessageEventArgs ev)
         {
-            if (!ev.Player.IsAlive) HintManager.AddSpectatorChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
-            else if (ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config!.Prefix, ev.Player.DisplayName) + ev.Text);
+            if (!ev.Player.IsAlive) HintManager.AddSpectatorChatMessage(string.Format(Config.Prefix, ev.Player.DisplayName) + ev.Text);
+            else if (ev.Player.IsSCP) HintManager.AddScpChatMessage(string.Format(Config.Prefix, ev.Player.DisplayName) + ev.Text);
         }
 
-        private static void OnChangedRole(PlayerChangedRoleEventArgs ev) => DisplayDataStore.UpdateAndValidateAll();
+        private static void OnChangedRole(PlayerChangedRoleEventArgs ev)
+        {
+            if (!ev.Player.IsReady)
+                return;
+            
+            DisplayDataStore.Get(ev.Player).Validate();
+        }
+
+        private static void OnLeft(PlayerLeftEventArgs ev) => DisplayDataStore.Destroy(ev.Player);
     }
 }
