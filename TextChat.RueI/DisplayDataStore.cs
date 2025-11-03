@@ -39,7 +39,7 @@ namespace TextChat.RueI
             foreach (Player player in Player.ReadyList)
             {
                 if (!player.IsSCP)
-                    return;
+                    continue;
                 
                 RueDisplay.Get(player).Update();
             }
@@ -50,7 +50,7 @@ namespace TextChat.RueI
             foreach (Player player in Player.ReadyList)
             {
                 if (player.IsAlive)
-                    return;
+                    continue;
                 
                 RueDisplay.Get(player).Update();
             }
